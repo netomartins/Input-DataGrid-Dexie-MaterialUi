@@ -6,7 +6,7 @@ function App() {
   return (
     <>
     <Container maxWidth="lg">
-      <Box sx={{ my: 12, height: '100vh'}}>
+      <Box sx={{ my: 12}}>
 
        
         <Home />
