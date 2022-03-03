@@ -4,50 +4,11 @@ import React, { useState } from 'react';
 import { Box, Button, Checkbox, Tooltip, Container, CssBaseline, Grid, TextField } from '@material-ui/core';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { IconButton } from "@material-ui/core";
-import { DataGrid, GridColDef } from '@material-ui/data-grid';
+import { GridColDef, DataGrid, GridApi, GridCellValue } from '@material-ui/data-grid';
 import { db, Friend } from '../data/db';
 import { blue } from "@material-ui/core/colors";
 import EditIcon from "@material-ui/icons/Edit";
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
-
-
-
-/* const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
- */
-
-
-
-
-
-// eslint-disable-next-line react/prop-types
-const MatEdit = ({ index }: any ) => {
-    const handleEditClick = (index:any) => {
-        console.log('Clicou', index[1])
-    };
-
-    return (
-        <div>
-            {
-                <Tooltip title="Editar">
-                    <IconButton
-                        color="secondary"
-                        aria-label="add an alarm"
-                        onClick={() => {handleEditClick(index) } }
-
-
-                    >
-
-                        <EditIcon style={{ color: blue[500] }} />
-
-                    </IconButton>
-                </Tooltip>
-            }
-        </div>
-    );
-};
-
-
-{/* <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */ }
 
 
 
@@ -75,23 +36,31 @@ const Home = () => {
             editable: true,
         },
         {
-            field: "actions",
-            headerName: "Editar",
+            field: 'action',
+            headerName: 'Action',
             sortable: false,
-            width: 140,
-            /* disableClickEventBubbling: true, */
             renderCell: (params) => {
-                return (
-                    <div
-                        className="d-flex justify-content-between align-items-center"
-                        style={{ cursor: "pointer" }}
-                    >
-                        <MatEdit index={0} />
-                    </div>
-                );
-            }
-
-        }
+              const onClick = (e: { stopPropagation: () => void; }) => {
+                e.stopPropagation();
+        
+                const api: GridApi = params.api;
+                const thisRow: Record<string, GridCellValue> = {};
+        
+                api
+                  .getAllColumns()
+                  .filter((c) => c.field !== '__check__' && !!c)
+                  .forEach(
+                    (c) => (thisRow[c.field] = params.getValue(params.id, c.field)),
+                  );
+        
+                return console.log(JSON.stringify(thisRow, null, 4));
+              };
+        
+                return <Button onClick={onClick}>Click</Button>;
+                        
+            },
+          },
+        
     ];
     // eslint-disable-next-line no-var
 
